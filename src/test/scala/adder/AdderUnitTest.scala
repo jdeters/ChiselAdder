@@ -17,7 +17,7 @@ class AdderUnitTester(c: Adder) extends PeekPokeTester(c) {
   private val Adder = c
 
   private val numBits = 4
-  private val maxNum = Math.pow(numBits, 2)
+  private val maxNum = Math.pow(2, numBits)
 
   for(i <- 0 to numBits) {
     for (j <- 0 to numBits) {
@@ -28,5 +28,13 @@ class AdderUnitTester(c: Adder) extends PeekPokeTester(c) {
 
       expect(Adder.io.sum, expected_sum)
     }
+  }
+}
+
+class AdderTester extends ChiselFlatSpec {
+  "Basic test using Driver.execute" should "be used as an alternative way to run specification" in {
+    iotesters.Driver.execute(Array(), () => new Adder) {
+      c => new AdderUnitTester(c)
+    } should be (true)
   }
 }
