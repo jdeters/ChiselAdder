@@ -3,6 +3,7 @@
 package adder
 
 import chisel3._
+import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 
 /**
   * This provides an alternate way to run tests, by executing then as a main
@@ -27,8 +28,5 @@ object AdderMain extends App {
   private val numBits = 4
   private val maxNum = Math.pow(2, numBits)
 
-  //do the test
-  iotesters.Driver.execute(args, () => new Adder(numBits)) {
-    c => new AdderUnitTester(c, maxNum.toInt)
-  }
+  (new chisel3.stage.ChiselStage).execute(Array("-X", "verilog"), Seq(ChiselGeneratorAnnotation(() => new Adder(numBits))))
 }
