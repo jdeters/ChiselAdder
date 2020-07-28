@@ -28,5 +28,7 @@ object AdderMain extends App {
   private val numBits = 4
   private val maxNum = Math.pow(2, numBits)
 
-  (new chisel3.stage.ChiselStage).execute(Array("-X", "verilog"), Seq(ChiselGeneratorAnnotation(() => new Adder(numBits))))
+  (new chisel3.stage.ChiselStage).execute(
+    Array("-X", "verilog"),
+    Seq(ChiselGeneratorAnnotation(() => new Adder(numBits))))
 }
