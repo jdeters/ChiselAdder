@@ -53,3 +53,5 @@ libraryDependencies ++= defaultVersions.map { case (dep, ver) =>
 scalacOptions ++= scalacOptionsVersion(scalaVersion.value)
 
 javacOptions ++= javacOptionsVersion(scalaVersion.value)
+
+libraryDependencies += "edu.berkeley.cs" %% "chiseltest" % "0.2.1"

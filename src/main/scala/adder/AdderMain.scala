@@ -4,6 +4,7 @@ package adder
 
 import chisel3._
 import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
+import chisel3.aop.injecting.InjectingAspect
 
 /**
   * This provides an alternate way to run tests, by executing then as a main
@@ -26,9 +27,23 @@ import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
   */
 object AdderMain extends App {
   private val numBits = 4
-  private val maxNum = Math.pow(2, numBits)
+
+  val design = ChiselGeneratorAnnotation(() => new Adder(numBits))
+
+  val testAspect = InjectingAspect(
+    //this function has to point to the actual path of the objects
+    //top.adders is the *actual* list of OneBitAdders in the Adder class
+    {top: Adder => top.adders},
+    {adder: OneBitAdder =>
+      val g = adder.io.a & adder.io.b
+      // p is actually defined in OneBitAdder
+      // The way Chisel is supposed to be used, there are no private variables
+      val p_c = adder.io.carryIn & adder.p
+      adder.io.carryOut := g | p_c
+    }
+  )
 
   (new chisel3.stage.ChiselStage).execute(
-    Array("-X", "verilog"),
-    Seq(ChiselGeneratorAnnotation(() => new Adder(numBits))))
+    Array("-X", "high"),
+    Seq(testAspect, design))
 }

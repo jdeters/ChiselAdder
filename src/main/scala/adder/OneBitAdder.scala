@@ -13,8 +13,4 @@ class OneBitAdder extends Module {
 
   val p = io.a ^ io.b
   io.sum := p ^ io.carryIn
-  
-  val g = io.a & io.b
-  val p_c = io.carryIn & p
-  io.carryOut := g | p_c
 }
