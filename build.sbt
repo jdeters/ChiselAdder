@@ -28,7 +28,7 @@ def javacOptionsVersion(scalaVersion: String): Seq[String] = {
 
 name := "Adder"
 
-version := "3.3.0"
+version := "3.4-SNAPSHOT"
 
 scalaVersion := "2.12.10"
 
@@ -47,11 +47,14 @@ val defaultVersions = Seq(
   "chiseltest"  -> "0.2.1+"
   )
 
-libraryDependencies ++= defaultVersions.map { case (dep, ver) =>
-  "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", ver) }
+//libraryDependencies ++= defaultVersions.map { case (dep, ver) =>
+  //"edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", ver) }
+
+libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.4-SNAPSHOT"
 
 scalacOptions ++= scalacOptionsVersion(scalaVersion.value)
 
 javacOptions ++= javacOptionsVersion(scalaVersion.value)
 
-libraryDependencies += "edu.berkeley.cs" %% "chiseltest" % "0.2.1"
+//libraryDependencies += "edu.berkeley.cs" %% "chiseltest" % "0.2.1"
+libraryDependencies += "edu.berkeley.cs" %% "chiseltest" % "0.3-SNAPSHOT" % Test
