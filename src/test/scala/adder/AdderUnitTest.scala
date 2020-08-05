@@ -16,10 +16,10 @@ class AdderTester extends FlatSpec with ChiselScalatestTester with Matchers {
   private val numBits = 4
   private val maxNum = Math.pow(2, numBits)
 
-  behavior of "MyModule"
-    it should "do something" in {
+  behavior of "RippleCarryAdder"
+    it should "add all the numbers correctly" in {
       test(
-        new Adder(numBits)).withAnnotations(Seq(AdderAspects.rippleCarry)) {
+        new Adder(numBits)).withAnnotations(new AdderAspects(numBits).rippleCarry) {
           c =>
           for{
             i <- 0 until maxNum.toInt
@@ -30,6 +30,23 @@ class AdderTester extends FlatSpec with ChiselScalatestTester with Matchers {
             c.io.b.poke(j.U)
             c.io.sum.expect(expected_sum.U)
           }
-      }
+        }
+  }
+
+    behavior of "CarryLookaheadAdder"
+      it should "add all the numbers correctly" in {
+        test(
+          new Adder(numBits)).withAnnotations(new AdderAspects(numBits).carryLookahead) {
+            c =>
+            for{
+              i <- 0 until maxNum.toInt
+              j <- 0 until maxNum.toInt
+            }{
+              val expected_sum = i + j
+              c.io.a.poke(i.U)
+              c.io.b.poke(j.U)
+              c.io.sum.expect(expected_sum.U)
+            }
+          }
     }
 }

@@ -8,8 +8,9 @@ object AdderMain extends App {
   private val numBits = 4
 
   val design = ChiselGeneratorAnnotation(() => new Adder(numBits))
+  val aspects = (new AdderAspects(numBits)).carryLookahead
 
   (new chisel3.stage.ChiselStage).execute(
-    Array("-X", "high"),
-    Seq(AdderAspects.rippleCarry, design))
+    Array("-X", "verilog"),
+    aspects ++ Seq(design))
 }
