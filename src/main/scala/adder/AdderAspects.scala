@@ -5,6 +5,7 @@ import chisel3.aop.injecting.InjectingAspect
 import chisel3.aop.Select
 import chisel3.aop._
 
+
 class AdderAspects(bitWidth: Int) {
   val rippleCarry = Seq(
     InjectingAspect(
@@ -12,11 +13,11 @@ class AdderAspects(bitWidth: Int) {
       //top.adders is the *actual* list of OneBitAdders in the Adder class
       {top: Adder => top.adders},
       {adder: OneBitAdder =>
-        val g = adder.io.a & adder.io.b
+        val g = adder.a & adder.b
         // p is actually defined in OneBitAdder
         // The way Chisel is supposed to be used, there are no private variables
-        val p_c = adder.io.carryIn & adder.p
-        adder.io.carryOut := g | p_c
+        val p_c = adder.carryIn & adder.p
+        adder.carryOut := g | p_c
       }
     )
   )
@@ -24,10 +25,10 @@ class AdderAspects(bitWidth: Int) {
   val carryLookahead = Seq(
     InjectingAspect(
       {top: Adder => top.adders},
-      {adder: OneBitAdder =>
-        val g = adder.io.a & adder.io.b
-        adder.io.pOut := adder.p
-        adder.io.gOut := g
+      {adder: OneBitAdder with carryLookaheadIO =>
+        val g = adder.a & adder.b
+        adder.pOut := adder.p
+        adder.gOut := g
       }
     ),
     InjectingAspect(
@@ -37,16 +38,16 @@ class AdderAspects(bitWidth: Int) {
 
         //pull the p and g out of each module and connect it to the carryLookahead module
         for(i <- 0 until bitWidth){
-          carryLookaheadModule.io.pIn(i) := adder.adders(i).io.pOut
-          carryLookaheadModule.io.gIn(i) := adder.adders(i).io.gOut
+          carryLookaheadModule.pIn(i) := adder.adders(i).pOut
+          carryLookaheadModule.gIn(i) := adder.adders(i).gOut
         }
         //reassign the carry ins to be from the carryLookahead module instead
         for(i <- 1 until bitWidth){
-            adder.adders(i).io.carryIn := carryLookaheadModule.io.cOut(i-1)
+            adder.adders(i).carryIn := carryLookaheadModule.cOut(i-1)
         }
 
         //reassign the last bit in sums to the carry out of the carryLookahead module
-        adder.sums.last := carryLookaheadModule.io.cOut.last
+        adder.sums.last := carryLookaheadModule.cOut.last
       }
     )
   )

@@ -26,9 +26,9 @@ class AdderTester extends FlatSpec with ChiselScalatestTester with Matchers {
             j <- 0 until maxNum.toInt
           }{
             val expected_sum = i + j
-            c.io.a.poke(i.U)
-            c.io.b.poke(j.U)
-            c.io.sum.expect(expected_sum.U)
+            c.a.poke(i.U)
+            c.b.poke(j.U)
+            c.sum.expect(expected_sum.U)
           }
         }
   }
@@ -43,9 +43,9 @@ class AdderTester extends FlatSpec with ChiselScalatestTester with Matchers {
               j <- 0 until maxNum.toInt
             }{
               val expected_sum = i + j
-              c.io.a.poke(i.U)
-              c.io.b.poke(j.U)
-              c.io.sum.expect(expected_sum.U)
+              c.a.poke(i.U)
+              c.b.poke(j.U)
+              c.sum.expect(expected_sum.U)
             }
           }
     }

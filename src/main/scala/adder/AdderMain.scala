@@ -11,6 +11,6 @@ object AdderMain extends App {
   val aspects = (new AdderAspects(numBits)).carryLookahead
 
   (new chisel3.stage.ChiselStage).execute(
-    Array("-X", "verilog"),
+    Array("-X", "high"),
     aspects ++ Seq(design))
 }
