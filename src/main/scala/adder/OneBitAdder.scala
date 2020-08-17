@@ -3,7 +3,7 @@ package adder
 import chisel3._
 import chisel3.experimental._
 
-trait carryLookaheadIO {
+trait CarryLookaheadIO {
   val pOut = IO(Output(Bool()))
   val gOut = IO(Output(Bool()))
 

@@ -25,7 +25,7 @@ class AdderAspects(bitWidth: Int) {
   val carryLookahead = Seq(
     InjectingAspect(
       {top: Adder => top.adders},
-      {adder: OneBitAdder with carryLookaheadIO =>
+      {adder: OneBitAdder with CarryLookaheadIO =>
         val g = adder.a & adder.b
         adder.pOut := adder.p
         adder.gOut := g
