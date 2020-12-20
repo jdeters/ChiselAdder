@@ -5,13 +5,12 @@ import chisel3.aop.injecting.InjectingAspect
 import chisel3.aop.Select
 import chisel3.aop._
 
-
 class AdderAspects(bitWidth: Int) {
   val rippleCarry = Seq(
     InjectingAspect(
       //this function has to point to the actual path of the objects
       //top.adders is the *actual* list of OneBitAdders in the Adder class
-      {top: Adder => top.adders},
+      {top: TestBench => top.wholeAdder.adders},
       {adder: OneBitAdder =>
         val g = adder.a & adder.b
         // p is actually defined in OneBitAdder
@@ -24,7 +23,7 @@ class AdderAspects(bitWidth: Int) {
 
   val carryLookahead = Seq(
     InjectingAspect(
-      {top: Adder => top.adders},
+      {top: TestBench => top.wholeAdder.adders},
       {adder: OneBitAdder with CarryLookaheadIO =>
         val g = adder.a & adder.b
         adder.pOut := adder.p
@@ -32,7 +31,7 @@ class AdderAspects(bitWidth: Int) {
       }
     ),
     InjectingAspect(
-      {top: Adder => Seq(top)},
+      {top: TestBench => Seq(top.wholeAdder)},
       {adder: Adder =>
         val carryLookaheadModule = Module(new CarryLookaheadGenerator(bitWidth))
 
