@@ -1,11 +1,11 @@
 package adder
 import chisel3._
-class Adder(bitWidth: Int) extends MultiIOModule {
+class RippleAdder(bitWidth: Int) extends MultiIOModule {
   val a = IO(Input(UInt(bitWidth.W)))
   val b = IO(Input(UInt(bitWidth.W)))
   val sum = IO(Output(UInt(bitWidth.W + 1)))
   val adders = for (i <- 0 until bitWidth) yield {
-    val unit = Module(new OneBitAdder() with CarryLookaheadIO)
+    val unit = Module(new RippleOneBitAdder())
     unit.a := a(i)
     unit.b := b(i)
     unit

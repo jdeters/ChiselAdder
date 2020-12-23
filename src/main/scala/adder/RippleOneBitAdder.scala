@@ -3,23 +3,16 @@ package adder
 import chisel3._
 import chisel3.experimental._
 
-trait CarryLookaheadIO {
-  val pOut = IO(Output(Bool()))
-  val gOut = IO(Output(Bool()))
-
-  pOut := false.B
-  gOut := false.B
-}
-
-class OneBitAdder extends MultiIOModule {
+class RippleOneBitAdder extends MultiIOModule {
   val a = IO(Input(Bool()))
   val b = IO(Input(Bool()))
   val carryIn = IO(Input(Bool()))
   val sum = IO(Output(Bool()))
   val carryOut = IO(Output(Bool()))
 
-  carryOut := false.B
-
+  val g = a & b
   val p = a ^ b
+  val p_c = carryIn & p
   sum := p ^ carryIn
+  carryOut := g | p_c
 }

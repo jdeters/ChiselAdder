@@ -5,12 +5,10 @@ import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 import chisel3.aop.injecting.InjectingAspect
 
 object AdderMain extends App {
-  private val numBits = 4
+  private val numBits = 128
 
-  val design = ChiselGeneratorAnnotation(() => new Adder(numBits))
-  val aspects = (new AdderAspects(numBits)).carryLookahead
+  val design = ChiselGeneratorAnnotation(() => new LookaheadAdder(numBits))
 
   (new chisel3.stage.ChiselStage).execute(
-    Array("-X", "high"),
-    aspects ++ Seq(design))
+    Array("-X", "verilog"), Seq(design))
 }
