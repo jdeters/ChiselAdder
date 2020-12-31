@@ -31,7 +31,6 @@ class TopAdder(bitWidth: Int, numSubAdders: Int) extends MultiIOModule {
   for (i <- 0 until numSubAdders) {
     for(j <- 0 until subAdderBits) {
       sums(i * subAdderBits + j) := adders(i).sum(j)
-      println("Connecting " + (i * subAdderBits + j) + " to " + " adder " + i + " bit " + j)
     }
   }
   sums.last := adders.last.carryOut
